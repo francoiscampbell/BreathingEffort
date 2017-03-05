@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 25
@@ -7,11 +8,12 @@ android {
     defaultConfig {
         applicationId "xyz.fcampbell.respiratoryeffort"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 22 //permissions
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        resValue 'string', 'EMPALINK_API_KEY', EMPALINK_API_KEY
+//        resValue 'string', 'EMPALINK_API_KEY', EMPALINK_API_KEY
+        resValue 'string', 'EMPALINK_API_KEY', '1482f602113740c0aac7310e724e3a92'
     }
     buildTypes {
         release {
@@ -29,6 +31,7 @@ repositories {
 
 dependencies {
     compile 'com.squareup.okhttp:okhttp:2.5.0'
+
     compile 'com.empatica.empalink:empalink:2.1@aar'
     compile 'com.android.support:appcompat-v7:25.2.0'
 
