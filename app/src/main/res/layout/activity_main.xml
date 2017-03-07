@@ -5,7 +5,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="@dimen/activity_padding"
     tools:context="xyz.fcampbell.respiratoryeffort.MainActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Server"/>
+
+    <Button
+        android:id="@+id/serverConnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Connect"/>
+
+    <Button
+        android:id="@+id/serverRestart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Restart"/>
+
+    <Button
+        android:id="@+id/serverDisconnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Disconnect"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wristband"/>
 
     <Button
         android:id="@+id/scan"

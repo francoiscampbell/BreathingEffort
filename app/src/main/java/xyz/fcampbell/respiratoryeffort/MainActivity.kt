@@ -10,19 +10,24 @@ import com.empatica.empalink.config.EmpaSensorType
 import com.empatica.empalink.config.EmpaStatus
 import com.empatica.empalink.delegate.EmpaDataDelegate
 import com.empatica.empalink.delegate.EmpaStatusDelegate
-import com.squareup.okhttp.*
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import org.json.JSONArray
-import java.io.IOException
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "MainActivity"
-        private const val SERVER_URL = "http://192.168.0.23:5000"
-        private const val WIN_SIZE = 16
+        private const val SERVER_URL = "http://192.168.0.15:5000"
+        private const val BATCH_SIZE = 16
     }
 
     private val empaDataDelegate = object : EmpaDataDelegate {
+        var calibrated = false
+
         override fun didReceiveTemperature(t: Float, timestamp: Double) = Unit
 
         override fun didReceiveGSR(gsr: Float, timestamp: Double) = Unit
@@ -34,7 +39,14 @@ class MainActivity : AppCompatActivity() {
         override fun didReceiveIBI(ibi: Float, timestamp: Double) = Unit
 
         override fun didReceiveBVP(bvp: Float, timestamp: Double) {
-            batchAndSend(bvp)
+            if (calibrated) {
+                batchAndSend(bvp)
+            } else {
+                if (bvp != 0f){
+                    calibrated = true
+                    batchAndSend(bvp)
+                }
+            }
         }
     }
     private val empaStatusDelegate = object : EmpaStatusDelegate {
@@ -54,12 +66,16 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "didDiscoverDevice($device, $deviceLabel, $rssi, $allowed)")
 
             if (allowed) {
+                empaDataDelegate.calibrated = false
+                restartServer()
                 empaManager.connectDevice(device)
+
             }
         }
     }
     private lateinit var empaManager: EmpaDeviceManager
     private val httpClient = OkHttpClient()
+    private var wsClient = makeWsClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,35 +84,48 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate")
 
         empaManager = EmpaDeviceManager(this, empaDataDelegate, empaStatusDelegate)
-        scan.setOnClickListener {
-            empaManager.authenticateWithAPIKey(getString(R.string.EMPALINK_API_KEY))
-        }
+        scan.setOnClickListener { authAndScan() }
         disconnect.setOnClickListener {
             empaManager.disconnect()
         }
+        serverConnect.setOnClickListener {
+            wsClient.close(1000, "Reconnecting")
+            wsClient = makeWsClient()
+        }
+        serverRestart.setOnClickListener {
+            restartServer()
+        }
+        serverDisconnect.setOnClickListener {
+            wsClient.close(1000, "Disconnecting")
+        }
     }
 
-    private val bvpData = FloatArray(WIN_SIZE)
+    private fun restartServer() {
+        val command = JSONObject(mapOf("command" to "restart"))
+        wsClient.send(command.toString())
+    }
+
+    private fun makeWsClient(): WebSocket {
+        return httpClient.newWebSocket(
+                Request.Builder()
+                        .url(SERVER_URL)
+                        .build(),
+                object : WebSocketListener() {})
+    }
+
+    private fun authAndScan() {
+        empaManager.authenticateWithAPIKey(getString(R.string.EMPALINK_API_KEY))
+    }
+
+    private val bvpData = FloatArray(BATCH_SIZE)
     private var bvpDataHead = 0
     private fun batchAndSend(data: Float) {
         bvpData[bvpDataHead++] = data
 
-        if (bvpDataHead >= WIN_SIZE) {
+        if (bvpDataHead >= BATCH_SIZE) {
             bvpDataHead = 0
             val jsonData = JSONArray(bvpData)
-            val request = Request.Builder()
-                    .url(SERVER_URL)
-                    .post(RequestBody.create(MediaType.parse("application/json"), jsonData.toString()))
-                    .build()
-            httpClient.newCall(request).enqueue(object : Callback {
-                override fun onFailure(request: Request, e: IOException) {
-                    Log.d(TAG, "onFailure($request, $e)")
-                }
-
-                override fun onResponse(response: Response?) {
-                    Log.d(TAG, "onResponse($response)")
-                }
-            })
+            wsClient.send(jsonData.toString())
         }
     }
 }
