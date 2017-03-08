@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import com.empatica.empalink.EmpaDeviceManager
 import com.empatica.empalink.config.EmpaSensorStatus
 import com.empatica.empalink.config.EmpaSensorType
@@ -57,8 +58,13 @@ class MainActivity : AppCompatActivity() {
         override fun didUpdateStatus(status: EmpaStatus) {
             Log.d(TAG, "didUpdateStatus($status)")
 
-            if (status == EmpaStatus.READY) {
-                empaManager.startScanning()
+            when (status) {
+                EmpaStatus.READY -> empaManager.startScanning()
+                EmpaStatus.CONNECTED -> Toast.makeText(this@MainActivity, "Connected to wristband", Toast.LENGTH_SHORT).show()
+                EmpaStatus.DISCONNECTED -> Toast.makeText(this@MainActivity, "Connected to wristband", Toast.LENGTH_SHORT).show()
+                EmpaStatus.CONNECTING -> Toast.makeText(this@MainActivity, "Connecting to wristband", Toast.LENGTH_SHORT).show()
+                EmpaStatus.DISCONNECTING -> Toast.makeText(this@MainActivity, "Disconnecting from wristband", Toast.LENGTH_SHORT).show()
+                EmpaStatus.DISCOVERING -> Toast.makeText(this@MainActivity, "Scanning for wristband", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -69,7 +75,6 @@ class MainActivity : AppCompatActivity() {
                 empaDataDelegate.calibrated = false
                 restartServer()
                 empaManager.connectDevice(device)
-
             }
         }
     }
@@ -113,7 +118,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun restartServer() {
-        wsClient?.close(1000, "Disconnecting")
         sendCommand("restart")
     }
 
