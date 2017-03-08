@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.ArrayAdapter
 import com.empatica.empalink.EmpaDeviceManager
 import com.empatica.empalink.config.EmpaSensorStatus
 import com.empatica.empalink.config.EmpaSensorType
@@ -21,7 +22,6 @@ import org.json.JSONObject
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val TAG = "MainActivity"
-        private const val SERVER_URL = "http://192.168.0.15:5000"
         private const val BATCH_SIZE = 16
     }
 
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             if (calibrated) {
                 batchAndSend(bvp)
             } else {
-                if (bvp != 0f){
+                if (bvp != 0f) {
                     calibrated = true
                     batchAndSend(bvp)
                 }
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
     }
     private lateinit var empaManager: EmpaDeviceManager
     private val httpClient = OkHttpClient()
-    private var wsClient = makeWsClient()
+    private var wsClient: WebSocket? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,33 +84,72 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate")
 
         empaManager = EmpaDeviceManager(this, empaDataDelegate, empaStatusDelegate)
-        scan.setOnClickListener { authAndScan() }
-        disconnect.setOnClickListener {
-            empaManager.disconnect()
-        }
         serverConnect.setOnClickListener {
-            wsClient.close(1000, "Reconnecting")
+            @Suppress("UNNECESSARY_SAFE_CALL")
+            wsClient?.close(1000, "Reconnecting")
             wsClient = makeWsClient()
+            getAnalysisModes()
         }
         serverRestart.setOnClickListener {
             restartServer()
         }
         serverDisconnect.setOnClickListener {
-            wsClient.close(1000, "Disconnecting")
+            wsClient?.close(1000, "Disconnecting")
+        }
+        scan.setOnClickListener { authAndScan() }
+        disconnect.setOnClickListener {
+            empaManager.disconnect()
+        }
+        setMode.setOnClickListener {
+            val mode = spinner.selectedItem as? String
+            if (mode != null) {
+                sendCommand("change_mode", mapOf("mode" to mode))
+            }
         }
     }
 
+    private fun getAnalysisModes() {
+        sendCommand("list_modes")
+    }
+
     private fun restartServer() {
-        val command = JSONObject(mapOf("command" to "restart"))
-        wsClient.send(command.toString())
+        wsClient?.close(1000, "Disconnecting")
+        sendCommand("restart")
+    }
+
+    private fun sendCommand(command: String, args: Map<String, String> = mapOf()) {
+        wsClient?.send(JSONObject(mapOf("command" to command, "args" to args)).toString())
+    }
+
+    private fun getServerAddress(): String {
+        val address = address.text.toString()
+        val port = port.text.toString()
+        return "http://$address:$port"
     }
 
     private fun makeWsClient(): WebSocket {
         return httpClient.newWebSocket(
                 Request.Builder()
-                        .url(SERVER_URL)
+                        .url(getServerAddress())
                         .build(),
-                object : WebSocketListener() {})
+                object : WebSocketListener() {
+                    override fun onMessage(webSocket: WebSocket, text: String) {
+                        processReceivedData(text)
+                    }
+                })
+    }
+
+    private fun processReceivedData(text: String) {
+        val data = JSONObject(text)
+        if (data.has("modes")) {
+            val modes = data.getJSONArray("modes")
+            val modesList = Array(modes.length()) { i -> modes[i] as String }
+            runOnUiThread {
+                val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, modesList)
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter = arrayAdapter
+            }
+        }
     }
 
     private fun authAndScan() {
@@ -125,7 +164,7 @@ class MainActivity : AppCompatActivity() {
         if (bvpDataHead >= BATCH_SIZE) {
             bvpDataHead = 0
             val jsonData = JSONArray(bvpData)
-            wsClient.send(jsonData.toString())
+            wsClient?.send(jsonData.toString())
         }
     }
 }

@@ -8,12 +8,14 @@ android {
     defaultConfig {
         applicationId "xyz.fcampbell.respiratoryeffort"
         minSdkVersion 19
+        //noinspection OldTargetApi
         targetSdkVersion 22 //permissions
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 //        resValue 'string', 'EMPALINK_API_KEY', EMPALINK_API_KEY
         resValue 'string', 'EMPALINK_API_KEY', '1482f602113740c0aac7310e724e3a92'
+        resValue 'string', 'BUILD_IP_ADDRESS', InetAddress.localHost.hostAddress
     }
     buildTypes {
         release {
@@ -41,4 +43,5 @@ dependencies {
     })
     testCompile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

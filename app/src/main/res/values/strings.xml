@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">RespiratoryEffort</string>
+    <string name="lblServer">Server</string>
+    <string name="serverConnect">Connect</string>
+    <string name="serverRestart">Restart</string>
+    <string name="serverDisconnect">Disconnect</string>
+    <string name="lblWristband">Wristband</string>
+    <string name="wristbandScanAndConnect">Scan and connect</string>
+    <string name="wristbandDisconnect">Disconnect</string>
+    <string name="hintAddress">Address</string>
+    <string name="hintPort">Port</string>
+    <string name="defaultPort">5000</string>
+    <string name="lblAnalysisMode">Analysis Mode</string>
+    <string name="setAnalysisMode">Set</string>
 </resources>
