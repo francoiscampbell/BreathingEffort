@@ -59,12 +59,15 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "didUpdateStatus($status)")
 
             when (status) {
-                EmpaStatus.READY -> empaManager.startScanning()
-                EmpaStatus.CONNECTED -> Toast.makeText(this@MainActivity, "Connected to wristband", Toast.LENGTH_SHORT).show()
-                EmpaStatus.DISCONNECTED -> Toast.makeText(this@MainActivity, "Connected to wristband", Toast.LENGTH_SHORT).show()
-                EmpaStatus.CONNECTING -> Toast.makeText(this@MainActivity, "Connecting to wristband", Toast.LENGTH_SHORT).show()
-                EmpaStatus.DISCONNECTING -> Toast.makeText(this@MainActivity, "Disconnecting from wristband", Toast.LENGTH_SHORT).show()
-                EmpaStatus.DISCOVERING -> Toast.makeText(this@MainActivity, "Scanning for wristband", Toast.LENGTH_SHORT).show()
+                EmpaStatus.READY -> {
+                    uiThreatToast("Scanning for wristband")
+                    empaManager.startScanning()
+                }
+                EmpaStatus.CONNECTED -> uiThreatToast("Connected to wristband")
+                EmpaStatus.DISCONNECTED -> uiThreatToast("Connected to wristband")
+                EmpaStatus.CONNECTING -> uiThreatToast("Connecting to wristband")
+                EmpaStatus.DISCONNECTING -> uiThreatToast("Disconnecting from wristband")
+                EmpaStatus.DISCOVERING -> uiThreatToast("Scanning for wristband")
             }
         }
 
@@ -110,6 +113,12 @@ class MainActivity : AppCompatActivity() {
             if (mode != null) {
                 sendCommand("change_mode", mapOf("mode" to mode))
             }
+        }
+    }
+
+    private fun uiThreatToast(text: String) {
+        runOnUiThread {
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         }
     }
 
