@@ -12,4 +12,7 @@
     <string name="defaultPort">5000</string>
     <string name="lblAnalysisMode">Analysis Mode</string>
     <string name="setAnalysisMode">Set</string>
+    <string-array name="dummy_entries">
+        <item>EffortDerivative</item>
+    </string-array>
 </resources>

@@ -22,7 +22,7 @@
 
     <Button
         android:id="@+id/serverConnect"
-        android:layout_width="117dp"
+        android:layout_width="109dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -32,7 +32,7 @@
 
     <Button
         android:id="@+id/serverRestart"
-        android:layout_width="117dp"
+        android:layout_width="109dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/serverRestart"
@@ -41,7 +41,7 @@
 
     <Button
         android:id="@+id/serverDisconnect"
-        android:layout_width="118dp"
+        android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/serverDisconnect"
@@ -64,7 +64,7 @@
 
     <Button
         android:id="@+id/scan"
-        android:layout_width="180dp"
+        android:layout_width="168dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -74,7 +74,7 @@
 
     <Button
         android:id="@+id/disconnect"
-        android:layout_width="180dp"
+        android:layout_width="168dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/wristbandDisconnect"
@@ -135,6 +135,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        tools:entries="@array/dummy_entries"
         app:layout_constraintBottom_toBottomOf="@+id/setMode"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
