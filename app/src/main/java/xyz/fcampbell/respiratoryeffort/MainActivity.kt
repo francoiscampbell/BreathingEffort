@@ -60,14 +60,14 @@ class MainActivity : AppCompatActivity() {
 
             when (status) {
                 EmpaStatus.READY -> {
-                    uiThreatToast("Scanning for wristband")
+                    uiThreatToast("Ready to scan for wristband")
                     empaManager.startScanning()
                 }
-                EmpaStatus.CONNECTED -> uiThreatToast("Connected to wristband")
-                EmpaStatus.DISCONNECTED -> uiThreatToast("Connected to wristband")
-                EmpaStatus.CONNECTING -> uiThreatToast("Connecting to wristband")
-                EmpaStatus.DISCONNECTING -> uiThreatToast("Disconnecting from wristband")
                 EmpaStatus.DISCOVERING -> uiThreatToast("Scanning for wristband")
+                EmpaStatus.CONNECTING -> uiThreatToast("Connecting to wristband")
+                EmpaStatus.CONNECTED -> uiThreatToast("Connected to wristband")
+                EmpaStatus.DISCONNECTING -> uiThreatToast("Disconnecting from wristband")
+                EmpaStatus.DISCONNECTED -> uiThreatToast("Disconnected from wristband")
             }
         }
 

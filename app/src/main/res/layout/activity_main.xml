@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="xyz.fcampbell.respiratoryeffort.MainActivity"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="81dp">
+    android:padding="@dimen/activity_padding">
 
     <TextView
         android:id="@+id/textView"
@@ -16,41 +14,61 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/lblServer"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:text="@string/lblServer"/>
 
-    <Button
-        android:id="@+id/serverConnect"
-        android:layout_width="109dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/serverConnect"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/port"/>
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/serverRestart"
-        android:layout_width="109dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/serverRestart"
-        app:layout_constraintLeft_toRightOf="@+id/serverConnect"
-        app:layout_constraintTop_toTopOf="@+id/serverConnect"/>
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/hintAddress"
+            android:inputType="textUri"
+            android:maxLines="1"
+            android:text="@string/BUILD_IP_ADDRESS"/>
 
-    <Button
-        android:id="@+id/serverDisconnect"
-        android:layout_width="110dp"
+        <EditText
+            android:id="@+id/port"
+            android:layout_width="48dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/hintPort"
+            android:inputType="number"
+            android:text="@string/defaultPort"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/serverDisconnect"
-        app:layout_constraintLeft_toRightOf="@+id/serverRestart"
-        app:layout_constraintTop_toTopOf="@+id/serverRestart"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="8dp"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/serverConnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/serverConnect"/>
+
+        <Button
+            android:id="@+id/serverRestart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/serverRestart"/>
+
+        <Button
+            android:id="@+id/serverDisconnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/serverDisconnect"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textView2"
@@ -58,63 +76,29 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/lblWristband"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/serverConnect"/>
+        android:text="@string/lblWristband"/>
 
-    <Button
-        android:id="@+id/scan"
-        android:layout_width="168dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/wristbandScanAndConnect"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"/>
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/disconnect"
-        android:layout_width="168dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/wristbandDisconnect"
-        app:layout_constraintBaseline_toBaselineOf="@+id/scan"
-        app:layout_constraintLeft_toRightOf="@+id/scan"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="8dp"/>
+        <Button
+            android:id="@+id/scan"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/wristbandScanAndConnect"/>
 
-    <EditText
-        android:id="@+id/address"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:ems="10"
-        android:hint="@string/hintAddress"
-        android:inputType="textUri"
-        android:maxLines="1"
-        android:text="@string/BUILD_IP_ADDRESS"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/port"
-        app:layout_constraintTop_toBottomOf="@+id/textView"/>
+        <Button
+            android:id="@+id/disconnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/wristbandDisconnect"/>
 
-    <EditText
-        android:id="@+id/port"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="@string/hintPort"
-        android:inputType="number"
-        android:text="@string/defaultPort"
-        app:layout_constraintBaseline_toBaselineOf="@+id/address"
-        app:layout_constraintRight_toRightOf="parent"/>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/textView3"
@@ -122,35 +106,26 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/lblAnalysisMode"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scan"/>
+        android:text="@string/lblAnalysisMode"/>
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        tools:entries="@array/dummy_entries"
-        app:layout_constraintBottom_toBottomOf="@+id/setMode"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/setMode"
-        app:layout_constraintTop_toTopOf="@+id/setMode"
-        app:layout_constraintVertical_bias="1.0"/>
-
-    <Button
-        android:id="@+id/setMode"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/setAnalysisMode"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"/>
+        android:orientation="horizontal">
 
-</android.support.constraint.ConstraintLayout>
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            tools:entries="@array/dummy_entries"/>
+
+        <Button
+            android:id="@+id/setMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:text="@string/setAnalysisMode"/>
+    </LinearLayout>
+
+</LinearLayout>
