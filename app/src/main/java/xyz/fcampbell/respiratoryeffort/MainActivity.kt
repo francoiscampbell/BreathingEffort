@@ -33,7 +33,11 @@ class MainActivity : AppCompatActivity() {
 
         override fun didReceiveGSR(gsr: Float, timestamp: Double) = Unit
 
-        override fun didReceiveBatteryLevel(level: Float, timestamp: Double) = Unit
+        override fun didReceiveBatteryLevel(level: Float, timestamp: Double){
+            runOnUiThread {
+                battery.text = (level * 100).toInt().toString()
+            }
+        }
 
         override fun didReceiveAcceleration(x: Int, y: Int, z: Int, timestamp: Double) = Unit
 
